@@ -6,6 +6,7 @@ module.exports = {
 
     connectToServer: async function (url, db, callback) {
         await MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
+            if (err) console.error(err);
             _db = client.db(db);
             _client = client;
             return callback(err, _db);

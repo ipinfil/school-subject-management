@@ -16,7 +16,6 @@
 		})
 		.then(res => res.json())
 		.then(data => {
-			console.log(data);
 			$user.loggedIn = data.status;
 
 			if (data.user) {

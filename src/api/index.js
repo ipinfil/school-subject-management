@@ -9,6 +9,7 @@ const xml2js = require('xml2js');
 const mongo = require('../db');
 const users = require('./users/users.route');
 const programs = require('./programs/programs.route');
+const students = require('./students/students.route');
 
 
 router.get('/', (req, res) => {
@@ -92,7 +93,6 @@ router.post('/init', async (req, res) => {
     }
 
     let result = await db.collection('programs').insertMany(programs);
-    console.log(result);
 
     res.status(200).json({status: true});
 });
@@ -100,5 +100,6 @@ router.post('/init', async (req, res) => {
 // routes registration
 router.use('/users', users);
 router.use('/programs', programs);
+router.use('/students', students);
 
 module.exports = router;

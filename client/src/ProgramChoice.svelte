@@ -1,6 +1,5 @@
 <script>
     import { user } from "./stores";
-	import { programs } from "./stores";
     import { onMount } from 'svelte';
 
     let programChoices = [];
@@ -14,8 +13,6 @@
             }
         }).then(res => res.json())
         .then(data => {
-            $programs = data.programs;
-
             for (let program of data.programs) {
                 let programName = program.skratka + ' - ' + program.popis;
                 programChoices.push({key: program.skratka, name: programName});

@@ -37,8 +37,7 @@
 		})
 		.then(res => res.json())
 		.then(data => {
-			$user.username = data.user;
-			$user.loggedIn = !data.status;
+			$user = {loggedIn: false};
 		});
 	}
 

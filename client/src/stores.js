@@ -4,4 +4,4 @@ export const user = writable({
     loggedIn: false
 })
 
-export const programs = writable([])
+export const program = writable({})

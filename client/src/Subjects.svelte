@@ -34,9 +34,8 @@
             pickedSubjects = $user.pickedSubjects ?? [];
             takenSubjects = $user.takenSubjects ?? [];
 
-            if (rightActive === 'taken') {
-                rightSideSubjects = $user.takenSubjects;
-            }
+            rightActive = 'choice';
+            leftActive = 'both';
 
             if (callback) {
                 callback();
@@ -57,9 +56,9 @@
             allSubjects = data.subjects;
             $program.subjects = allSubjects;
 
-            if (rightActive === 'choice') {
-                rightSideSubjects = $program.subjects;
-            }
+            rightActive = 'choice';
+            leftActive = 'both';
+            rightSideSubjects = $program.subjects;
 
             if (callback) {
                 callback();
@@ -72,6 +71,9 @@
         fetchProgramSubjects();
         modal = new bootstrap.Modal(document.getElementById("subject-info"), {});
     });
+
+    let pickedSubjectsCreditSum = 0;
+    $: pickedSubjectsCreditSum = pickedSubjects.reduce((carry, current) => { return (carry ?? 0) + parseInt(current.kreditneOhodnotenie); }, 0);
 
 </script>
 
@@ -133,6 +135,17 @@
                                 fetchProgramSubjects();
                             }}"
                         />
+                        <tfoot>
+                            <tr class="table-info">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class:text-danger="{leftActive == 'both' ? pickedSubjectsCreditSum < 60 : pickedSubjectsCreditSum < 30}">{pickedSubjectsCreditSum}</td>
+                                <td></td>
+                                <td></td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -185,7 +198,7 @@
                                 fetchStudentSubjects();
                                 fetchProgramSubjects();
                             }}"
-                            />
+                        />
                     </table>
                 </div>
             </div>

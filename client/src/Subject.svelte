@@ -100,7 +100,7 @@
                 }}" title="Zapísať predmet" class="text-success fas fa-plus-circle"></i></td>
         {/if}
     {:else if action === 'add-taken/remove-taken'}
-        {#if $user.takenSubjectCodes.includes(subject.skratka)}
+        {#if $user.takenSubjectCodes && $user.takenSubjectCodes.includes(subject.skratka)}
             <td><i on:click="{(e) => {
                 $user.takenSubjects = $user.takenSubjects.filter((sbj) => sbj.skratka !== subject.skratka);
                 updateStudentTakenSubjects(() => {

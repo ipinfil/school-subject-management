@@ -134,8 +134,7 @@
                                 fetchStudentSubjects();
                                 fetchProgramSubjects();
                             }}"
-                        />
-                        <tfoot>
+                        >
                             <tr class="table-info">
                                 <td></td>
                                 <td></td>
@@ -145,7 +144,7 @@
                                 <td></td>
                                 <td colspan="3"></td>
                             </tr>
-                        </tfoot>
+                        </SubjectPaginator>
                     </table>
                 </div>
             </div>

@@ -1,8 +1,6 @@
 <script>
     import Subject from './Subject.svelte';
     import { fade } from 'svelte/transition';
-    import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
     export let subjects;
     export let fields;
@@ -21,7 +19,7 @@
                     <td>{i + 1}</td>
                     <Subject {fields} {subject} {actions}
                         bind:detailSubject={detailSubject} {modal}
-                        on:refresh="{(e) => {dispatch('refresh');}}"
+                        on:refresh
                     />
                 </tr>
             {/if}
@@ -31,13 +29,14 @@
                 </tr>
         {/each}
     </tbody>
-    {#if subjects.length > maxRecords}
     <tfoot>
+        <slot></slot>
+        {#if subjects.length > maxRecords}
         <tr>
             <td colspan="7"><button class="btn btn-primary" on:click="{() => maxRecords += step}">Zobraziť viac</button></td>
         </tr>
+        {/if}
     </tfoot>
-    {/if}
 <style>
 
 </style>

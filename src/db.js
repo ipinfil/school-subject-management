@@ -18,6 +18,6 @@ module.exports = {
     },
 
     close: function () {
-        client.close();
+        _client.close();
     }
 };

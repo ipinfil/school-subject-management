@@ -1,3 +1,20 @@
 .full-height {
     min-height: 100vh;
 }
+
+@keyframes scaling {
+    From {
+        -webkit-transform: scale(1.0);
+    }
+    To {
+        -webkit-transform: scale(1.1);
+    }
+}
+
+#loading {
+    animation: scaling ease 1s infinite alternate;
+}
+
+.main {
+    transition: opacity 0.3s ease;
+}

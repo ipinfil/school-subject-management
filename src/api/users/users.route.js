@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const db = require('../../db');
 const mongo = require('../../db');
+const { HTTP_STATUS } = require('../../constants');
 
+// get user info
 router.get('/status', (req, res) => {
     let user = req.session.user;
 
@@ -11,16 +12,20 @@ router.get('/status', (req, res) => {
     });
 });
 
+// login user
 router.post('/login', async (req, res) => {
     let user = req.body.username;
     let status = false;
     let extra;
 
-    var db = mongo.getDb();
+    const db = mongo.getDb();
 
-    if (user && user !== null) {
+    if (user) {
+        // find user
         let fetchedUser = await db.collection("users").findOne({name: user});
 
+        // if user is not found, create him - this app does not support user authentication
+        // that would be outside of the scope of this project :)
         if (!fetchedUser) {
             let createdUser = await db.collection("users").insertOne({name: user});
 
@@ -29,37 +34,41 @@ router.post('/login', async (req, res) => {
             extra = 'registered';
         }
 
+        // inject user into session
         req.session.user = {name: user};
         status = true;
     }
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
         status: status,
         user: req.session.user,
         extra: extra
     });
 })
 
+// logout user
 router.post('/logout', (req, res) => {
     let user = req.session.user;
     let status = false;
 
-    if (user && user !== null) {
+    if (user) {
         req.session.destroy();
         status = true;
     }
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
         status: status,
         user: null
     });
 })
 
+// user has made a study program choice
 router.post('/program-choice', async (req, res) => {
     var db = mongo.getDb();
     let user = req.session.user;
+
     if (!user) {
-        return res.status(401);
+        return res.status(HTTP_STATUS.NOT_AUTHORIZED);
     }
 
     let programSkr = req.body.program;
@@ -84,21 +93,26 @@ router.post('/program-choice', async (req, res) => {
 
         for (studyPlan of studyPlans) {
             for (studyType of studyPlan) {
+                // skip non-compulsory subjects
                 if (!studyType.nazov || studyType.nazov !== "Povinné predmety") {
                     continue;
                 }
 
                 try {
                     let bloky = studyType.bloky;
+
+                    // variable bloky is object
                     if (Object.prototype.toString.call(bloky) === '[object Object]') {
                         bloky = [bloky];
                     }
 
                     for (block of bloky) {
+                        // skip block without subjects
                         if (!block.predmety) {
                             continue;
                         }
-                        console.log(block);
+
+                        // add compulsory subjects from chosen year to student's attending subjects
                         for (predmet of block.predmety) {
                             if (predmet.rocnik == year && !subjectCodes.includes(predmet.skratka)) {
                                 programSubjects.push(predmet);
@@ -129,7 +143,7 @@ router.post('/program-choice', async (req, res) => {
     req.session.user.program = req.body.program;
     req.session.user.year = req.body.year;
 
-    res.status(200).json({status: true});
+    res.status(HTTP_STATUS.OK).json({status: true});
 })
 
 module.exports = router;

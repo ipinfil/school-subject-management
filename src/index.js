@@ -5,6 +5,7 @@ const sessions = require('express-session');
 const api = require('./api');
 const mongo = require('./db');
 const cache = require('./cache');
+const { HTTP_STATUS, SESSION_SECRET } = require('./constants');
 var MongoDBStore = require('connect-mongodb-session')(sessions);
 
 const app = express();
@@ -37,7 +38,7 @@ mongo.connectToServer(mongoUrl, 'dd', (err, _db) => {
 
     //session middleware
     app.use(sessions({
-        secret: "sdfasdfjnasofdsaofj",
+        secret: SESSION_SECRET,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
         },
@@ -49,7 +50,7 @@ mongo.connectToServer(mongoUrl, 'dd', (err, _db) => {
     cache.initCache();
 
     app.get('/', (req, res) => {
-        res.status(200).json({
+        res.status(HTTP_STATUS.OK).json({
             message: '📦 Svelte Express API 📦'
         });
     });

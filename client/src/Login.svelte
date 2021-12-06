@@ -1,14 +1,12 @@
 <script>
     import { user } from "./stores";
+    import { baseUrl, defaultRequestOptions } from "./constants";
     export let registered;
 
     function handleLogin(event) {
-        fetch('http://localhost:5678/api/users/login', {
+        fetch(baseUrl + 'users/login', {
+            ...defaultRequestOptions,
             method: "post",
-            credentials: "include",
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({username: $user.username})
         })
         .then(res => res.json())
@@ -37,8 +35,8 @@
             <div class="col">
                 <form id="login-form" on:submit|preventDefault="{handleLogin}" class="row">
                     <div class="col mb-3">
-                        <label for="id"><strong>Zadajte svoje univerzitné identifikačné číslo:</strong></label>
-                        <input type="text" class="form-control form-control-lg" bind:value="{$user.username}">
+                        <label for="username"><strong>Zadajte svoje univerzitné identifikačné číslo:</strong></label>
+                        <input id="username" type="text" class="form-control form-control-lg" bind:value="{$user.username}">
                     </div>
                     <div class="col mb-3">
                         <div class="row align-items-end h-100">

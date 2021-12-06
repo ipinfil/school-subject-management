@@ -12,7 +12,7 @@ Na beh je potrebné mať prístup k `MongoDB` databáze + `NodeJS` (odporúčam 
 # Setup projektu
 1. V root adresári projektu zavolajte príkaz `npm install` na inštaláciu potrebných packagov na beh backendu projektu.
 2. Následne zavolajte príkaz `npm run client-install` na inštaláciu potrebných packagov na beh frontendu projektu.
-3. Upravte súbor `src/db.config.js.default`, ktorý obsahuje placeholder na adresu MongoDB servera. 
+3. Upravte súbor `src/db.config.js.default`, ktorý obsahuje placeholder na adresu MongoDB servera. Potom ho premenujte na `db.config.js`.
 4. Následne zavolajte príkaz `npm run dev`, ktorý spustí aj backend server, aj frontend server.
 5. V konzole by sa mal objaviť proces buildu frontendu a takisto notifikačné hlášky backend serveru o pripojení na databázu a začatí servovania obsahu.
 6. Projekt je nakonfigurovaný tak, že backend beží na porte 8000 a frontend na porte 3400. Teda na obsluhu aplikácie vo svojom browseri zadajte adresu `localhost:3400`.

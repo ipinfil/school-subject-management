@@ -4,6 +4,7 @@
     import SubjectPaginator from "./SubjectPaginator.svelte";
     import SubjectInfo from "./SubjectInfo.svelte";
     import { onMount } from 'svelte';
+    import { baseUrl, defaultRequestOptions } from './constants';
 
     let allSubjects = [];
     let pickedSubjects = [];
@@ -18,13 +19,7 @@
 
     const fetchStudentSubjects = (callback = null) => {
         // fetch picked and taken subjects
-        fetch('http://localhost:5678/api/students/subjects', {
-            method: 'get',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
+        fetch(baseUrl + 'students/subjects', defaultRequestOptions).then(res => res.json())
         .then(data => {
             $user.pickedSubjects = data.subjects ?? [];
             $user.takenSubjects = data.taken_subjects ?? [];
@@ -45,13 +40,7 @@
 
     const fetchProgramSubjects = (callback = null) => {
         // fetch all program subjects
-        fetch('http://localhost:5678/api/programs/subjects', {
-            method: 'get',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
+        fetch(baseUrl + 'programs/subjects', defaultRequestOptions).then(res => res.json())
         .then(data => {
             allSubjects = data.subjects;
             $program.subjects = allSubjects;
@@ -90,20 +79,20 @@
                 <div class="col">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" class:active="{leftActive == 'both'}" href="#" on:click="{() => {
+                            <a class="nav-link" aria-current="page" class:active="{leftActive == 'both'}" href="#/" on:click="{() => {
                                 pickedSubjects = $user.pickedSubjects;
                                 leftActive = 'both';
                             }}">Zimný a letný semester</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" class:active="{leftActive == 'winter'}" href="#" on:click="{() => {
-                                pickedSubjects = $user.pickedSubjects.filter((subject) => subject.semester === "Z");
+                            <a class="nav-link" class:active="{leftActive == 'winter'}" href="#/" on:click="{() => {
+                                pickedSubjects = $user.pickedSubjects.filter((subject) => subject.semester === 'Z');
                                 leftActive = 'winter';
                                 }}">Zimný semester</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" class:active="{leftActive == 'summer'}" on:click="{() => {
-                                pickedSubjects = $user.pickedSubjects.filter((subject) => subject.semester === "L");
+                            <a class="nav-link" href="#/" class:active="{leftActive == 'summer'}" on:click="{() => {
+                                pickedSubjects = $user.pickedSubjects.filter((subject) => subject.semester === 'L');
                                 leftActive = 'summer';
                                 }}">Letný semester</a>
                         </li>
@@ -159,13 +148,13 @@
                 <div class="col">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="nav-link" class:active="{rightActive == 'choice'}" href="#" on:click="{() => {
+                            <a class="nav-link" class:active="{rightActive == 'choice'}" href="#/" on:click="{() => {
                                 rightSideSubjects = allSubjects;
                                 rightActive = 'choice';
                             }}" aria-current="page">Voľba predmetov</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" class:active="{rightActive == 'taken'}" href="#" on:click="{() => {
+                            <a class="nav-link" class:active="{rightActive == 'taken'}" href="#/" on:click="{() => {
                                 rightSideSubjects = $user.takenSubjects;
                                 rightActive = 'taken';
                                 }}">Absolvované predmety</a>

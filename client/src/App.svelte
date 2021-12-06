@@ -6,14 +6,13 @@
 	import Login from "./Login.svelte";
 	import Main from "./Main.svelte";
 
+	import { baseUrl, defaultRequestOptions } from "./constants";
+
 	let loaded = false;
 	let registered = false;
 
 	onMount(() => {
-		fetch('http://localhost:5678/api/users/status', {
-			method: 'get',
-			credentials: 'include'
-		})
+		fetch(baseUrl + 'users/status', defaultRequestOptions)
 		.then(res => res.json())
 		.then(data => {
 			$user.loggedIn = data.status;

@@ -1,17 +1,12 @@
 <script>
     import { user } from "./stores";
     import { onMount } from 'svelte';
+    import { baseUrl, defaultRequestOptions } from './constants';
 
     let programChoices = [];
 
     onMount(() => {
-        fetch('http://localhost:5678/api/programs/list', {
-            method: 'get',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
+        fetch(baseUrl + 'programs/list', defaultRequestOptions).then(res => res.json())
         .then(data => {
             for (let program of data.programs) {
                 let programName = program.skratka + ' - ' + program.popis;
@@ -23,12 +18,9 @@
     });
 
     function handleProgramChoice(e) {
-        fetch('http://localhost:5678/api/users/program-choice', {
+        fetch(baseUrl + 'users/program-choice', {
+            ...defaultRequestOptions,
 			method: "post",
-			credentials: "include",
-			headers: {
-				'Content-Type': 'application/json'
-			},
             body: JSON.stringify({
                 program: $user.program,
                 year: $user.year
@@ -52,11 +44,11 @@
             <form class="d-flex justify-content-center" on:submit|preventDefault="{handleProgramChoice}">
                 <div class="pe-1">
                     <label for="year">Rok štúdia</label>
-                    <input type="number" bind:value="{$user.year}" name="year" class="form-control">
+                    <input id="year" type="number" bind:value="{$user.year}" name="year" class="form-control">
                 </div>
                 <div class="pe-3">
-                    <label for="year">Študijný program</label>
-                    <select bind:value="{$user.program}" class="form-select" aria-label="Default select example" name="program">
+                    <label for="program">Študijný program</label>
+                    <select id="program" bind:value="{$user.program}" class="form-select" aria-label="Default select example" name="program">
                         {#each programChoices as option}
                             <option value="{option.key}">{option.name}</option>
                         {/each}

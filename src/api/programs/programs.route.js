@@ -1,37 +1,36 @@
 const router = require('express').Router();
 const mongo = require('../../db');
 const { getCache } = require('../../cache');
+const { HTTP_STATUS } = require('../../constants');
 
-var db = mongo.getDb();
-var cache = getCache();
-
+// get list of available programs
 router.get('/list', async (req, res) => {
-    if (!db) {
-        db = mongo.getDb();
-    }
+    const cache = getCache();
 
-    if (!cache) {
-        cache = getCache();
-    }
-
+    // first check cache
     let programs = cache.get('programs-list');
 
     if (!programs) {
-        programs = await db.collection('programs').find().toArray();
+        // fetch programs
+        programs = await mongo.getDb().collection('programs').find().toArray();
+
+        // cache it for quicker access
         cache.set('programs-list', programs);
     }
 
-    res.status(200).json({status: true, programs: programs});
+    res.status(HTTP_STATUS.OK).json({status: true, programs: programs});
 });
 
+// get list of program's subjects
 router.get('/subjects', async (req, res) => {
-    var db = mongo.getDb();
     let user = req.session.user;
+
     if (!user) {
-        return res.status(401);
+        return res.status(HTTP_STATUS.NOT_AUTHORIZED);
     }
 
-    let program = await db.collection('programs').findOne({skratka: user.program});
+    // user's program
+    let program = await mongo.getDb().collection('programs').findOne({skratka: user.program});
     let subjects = [];
     let subjectCodes = [];
 
@@ -43,6 +42,7 @@ router.get('/subjects', async (req, res) => {
             }
 
             let editedTyp = typVyucby;
+            // if typVyucby variable is object
             if (Object.prototype.toString.call(typVyucby.bloky) === '[object Object]') {
                 editedTyp.bloky = [typVyucby.bloky];
             }
@@ -51,10 +51,12 @@ router.get('/subjects', async (req, res) => {
                 for (predmet of blok.predmety) {
                     let editedSubject = predmet;
 
+                    // avoid duplicates
                     if (subjectCodes.includes(editedSubject.skratka)) {
                         continue;
                     }
 
+                    // mark subjects according to their types
                     editedSubject.typ = typVyucby.nazov === "Povinné predmety" ? "p" : (typVyucby.nazov === "Povinne voliteľné predmety" ? 'pv' : 'p');
 
                     subjects.push(editedSubject);
@@ -64,7 +66,7 @@ router.get('/subjects', async (req, res) => {
         }
     }
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
         status: true,
         subjects: subjects
     });

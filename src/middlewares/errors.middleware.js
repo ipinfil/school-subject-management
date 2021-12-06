@@ -1,5 +1,7 @@
+const { HTTP_STATUS } = require('../constants');
+
 function notFound(req, res, next) {
-    res.status(404);
+    res.status(HTTP_STATUS.NOT_FOUND);
     const error = new Error(`🔍 - Not Found - ${req.originalUrl}`);
     next(error);
 }
@@ -7,7 +9,7 @@ function notFound(req, res, next) {
 /* eslint-disable no-unused-vars */
 function errorHandler(err, req, res, next) {
     /* eslint-enable no-unused-vars */
-    const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
+    const statusCode = res.statusCode !== HTTP_STATUS.OK ? res.statusCode : HTTP_STATUS.SERVER_ERROR;
     res.status(statusCode);
     res.json({
         message: err.message,
